@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gz.pm.dao.PmUserTabCusMapper" >
+  <sql id="Page_Where_Clause" >
+    select id,username,name,pwd,memo from pm_user_tab
+    <if test="name != null and name != ''" >
+    	where username like '${name}'
+    		or name like '${name}'
+    		or pinyin like '${name}'
+    		or jianpin like '${name}'
+    </if>
+  </sql>
+  <select id="findUserPageList" resultType="com.gz.pm.pojo.vo.PmUserVo" parameterType="com.gz.pm.pojo.vo.PmUserVo" >
+  		<include refid="Page_Where_Clause" />
+  </select>
+  <select id="findUserPageCount" resultType="int" parameterType="com.gz.pm.pojo.vo.PmUserVo" >
+  		select count(*) num from (<include refid="Page_Where_Clause" />) t
+  </select>
+  <select id="getProjectTreeUser" resultType="com.gz.pm.pojo.vo.PmProjectTreeVo" parameterType="string" >
+  	select 
+	  pu.id,
+	  u.name,
+	  u.memo,
+	  pu.projectid parent,
+	  pu.role
+	from
+	  pm_user_tab u 
+	  join pm_pro_user_rel_tab pu 
+	    on u.id = pu.userid 
+	where pu.projectid = #{projectId}
+  </select>
+  <select id="getUserWithProjectRole" resultType="com.gz.pm.pojo.vo.PmUserVo" parameterType="com.gz.pm.pojo.vo.PmUserVo">
+  	select 
+	  u.id,
+	  u.name,
+	  u.username,
+	  u.pwd,
+	  u.memo,
+	  pu.role,
+	  pu.projectid
+	from
+	  pm_user_tab u 
+	  join pm_pro_user_rel_tab pu 
+	    on u.id = pu.userid 
+	where u.username = #{username}
+		and pu.projectid = #{projectid}
+		
+  </select>
+  <select id="getUserListByProjectId" resultType="com.gz.pm.pojo.vo.PmUserVo" parameterType="String">
+  	select 
+	  u.id,
+	  u.name,
+	  u.username,
+	  u.pwd,
+	  u.memo,
+	  pu.role
+	from
+	  pm_user_tab u 
+	  join pm_pro_user_rel_tab pu 
+	    on u.id = pu.userid 
+	where pu.projectid = #{projectid}
+  </select>
+</mapper>
