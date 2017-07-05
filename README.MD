@@ -1,4 +1,0 @@
-PM是一个项目管理的工程
-generatorSqlmap是mybatis对数据库反向生成代码的工程
-PM.sql是PM项目用的sql
-
